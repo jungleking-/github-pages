@@ -1,0 +1,8 @@
+Model Information:
+* title:	Grey Hoodie Basic
+* source:	https://sketchfab.com/3d-models/grey-hoodie-basic-1e540d23c6c14d41ba1916f6048d2407
+* author:	3DSCANFR (sdrn) (https://sketchfab.com/3DSCANFR)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
