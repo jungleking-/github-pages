@@ -1,25 +1,47 @@
-   let url = "https://jungleking-.github.io/github-pages/Assets/3D/FBX/Cloth0.fbx";
+   let url = "https://jungleking-.github.io/github-pages/Assets/3D/GLTF/Cloth0/scene.gltf";
    
    import * as THREE from 'https://cdn.skypack.dev/three@0.128.0/build/three.module.js';
    import Stats from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/libs/stats.module.js';    
    import { OrbitControls } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/controls/OrbitControls.js';
    import { FBXLoader } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/loaders/FBXLoader.js';
+   import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/loaders/GLTFLoader.js';
    
    let camera, scene, renderer, stats;
    
    const clock = new THREE.Clock();
    
    let mixer;
-   
+
+   var size = {
+    width : 975,
+    height : 1200
+   }
+
+   function innerWidth() {
+     const div = document.getElementById('mainImageSlider');
+     console.log(div.clientWidth);
+     return div.clientWidth;
+     return window.innerWidth;
+   }
+
+   function innerHeight() {
+    const div = document.getElementById('mainImageSlider');
+    return div.clientWidth;
+    return window.innerHeight;
+   }
+
    init();
    animate();
    
    function init() {      
-    const container = document.createElement('div');
-    document.body.appendChild(container);
+    const div = document.getElementById('mainImageSlider');
+    const container = document.createElement('li');
+    container.className = "slider_main";
+    div.appendChild(container);
+//    document.body.appendChild(container);
     
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-    camera.position.set(100, 200, 300);
+    camera = new THREE.PerspectiveCamera(45, innerWidth() / innerHeight(), 1, 2000);
+    camera.position.set(0, 150, 200);
     
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xa0a0a0);
@@ -51,30 +73,26 @@
     scene.add(grid);
     
     // model
-    const loader = new FBXLoader();
-    loader.load(url, function (object) {
-      
-      mixer = new THREE.AnimationMixer(object);
+
+    const loader = new GLTFLoader();
+    loader.load(url, function (gltf) {      
+      mixer = new THREE.AnimationMixer(gltf);
+      var model = gltf.scene;
       // console.log(object.animations);
       // const action = mixer.clipAction(object.animations[ 0 ]);
       // action.play();
-      
-      object.traverse(function (child) {
-        
-        if (child.isMesh) {
-          
+      model.traverse(function (child) {        
+        if (child.isMesh) {          
           child.castShadow = true;
-          child.receiveShadow = true;
-          
-        }
-        
+          child.receiveShadow = true;          
+        }        
       });
-      scene.add(object);        
+      scene.add(model);        
     });
     
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(innerWidth(), innerHeight());
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
     
@@ -90,9 +108,9 @@
   }
   
   function onWindowResize() {      
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = innerWidth() / innerHeight();
     camera.updateProjectionMatrix();      
-    renderer.setSize(window.innerWidth, window.innerHeight);      
+    renderer.setSize(innerWidth(), innerHeight());      
   }    
   
   function animate() {      
